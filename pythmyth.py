@@ -6,7 +6,7 @@ from web3 import Web3
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Connect to Ethereum node
-w3 = Web3(Web3.HTTPProvider('https://mainnet.infura.io/v3/bb7e4abab773404d8f006463abc3ca39'))
+w3 = Web3(Web3.HTTPProvider('infuraxxxxxx'))
 
 def analyze_contract_with_mythril(contract_address):
     logging.info(f'Analyzing contract {contract_address} with Mythril...')
