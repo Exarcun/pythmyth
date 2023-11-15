@@ -6,7 +6,7 @@ from web3 import Web3
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Connect to Ethereum node
-w3 = Web3(Web3.HTTPProvider('INFURA_ID'))
+w3 = Web3(Web3.HTTPProvider('https://mainnet.infura.io/v3/bb7e4abab773404d8f006463abc3ca39'))
 
 def analyze_contract_with_mythril(contract_address):
     logging.info(f'Analyzing contract {contract_address} with Mythril...')
@@ -15,11 +15,15 @@ def analyze_contract_with_mythril(contract_address):
         cmd = ['myth', 'analyze', '--execution-timeout', '600', '--max-depth', '20', '--address', contract_address]
         result = subprocess.run(cmd, capture_output=True, text=True)
         
-        # Write result to a file named after the contract address
-        with open(f'{contract_address}.txt', 'w') as file:
-            file.write(result.stdout)
-        
-        logging.info(f'Analysis for contract {contract_address} written to {contract_address}.txt')
+        # Check if Mythril output contains the specific message
+        if "The analysis was completed successfully. No issues were detected." not in result.stdout:
+            # Write result to a file named after the contract address
+            with open(f'{contract_address}.txt', 'w') as file:
+                file.write(result.stdout)
+            
+            logging.info(f'Analysis for contract {contract_address} written to {contract_address}.txt')
+        else:
+            logging.info(f'No issues detected for contract {contract_address}. Skipping file save.')
 
     except Exception as e:
         logging.error(f'Error analyzing contract {contract_address}: {e}')
@@ -50,4 +54,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
